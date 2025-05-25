@@ -1,0 +1,205 @@
+import React, { useCallback, useEffect, useState } from "react";
+import fetchData from "../../libs/api";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import "../css/category-list.css";
+import ActionButton from "../global/ActionButton";
+import ActionButtonMenu from "../global/ActionButtonMenu";
+import Button from "../global/Button";
+import CardHeader from "../global/CardHeader";
+import DeleteData from "../global/DeleteData";
+import IndianaDragScroller from "../global/IndianaDragScroller";
+import Searchbar from "../global/Searchbar";
+import CreateBrand from "./CreateBrand";
+import EditBrand from "./EditBrand";
+
+const BrandList = () => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+
+  const [data, setData] = useState([]);
+  const [loader, setLoader] = useState(false);
+
+  const [selectedQuery, setSelectedQuery] = useState("name");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [message, setMessage] = useState("");
+
+  const loadMoreBrand = useCallback(() => {
+    setPage(page + 1);
+  }, [page]);
+
+  const getBrands = useCallback(() => {
+    setLoader(true);
+
+    fetchData(
+      `/api/v1/brands?${selectedQuery}=${
+        selectedQuery ? searchTerm : ""
+      }&page=${searchTerm.length > 2 ? "" : page}&limit=${
+        searchTerm.length > 2 ? "" : limit
+      }`,
+      "GET"
+    )
+      .then((result) => {
+        if (result.success) {
+          if (searchTerm.length > 2) {
+            if (page > 1) {
+              setPage(1);
+              setData([]);
+            }
+            setData(result.data);
+          } else if (page > 1) {
+            setData([...data, ...result.data]);
+          } else {
+            setData(result.data);
+          }
+          setMessage(result.message);
+        } else {
+          showSuccessToast(result.message);
+          setMessage(result.message);
+        }
+      })
+      .catch((error) => {
+        showErrorToast(error);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
+  }, [selectedQuery, searchTerm, page, limit]);
+
+  useEffect(() => {
+    const getBrandsDebounce = setTimeout(() => {
+      getBrands();
+    }, 500);
+
+    return () => clearTimeout(getBrandsDebounce);
+  }, [selectedQuery, searchTerm, page, limit]);
+
+  return (
+    <>
+      {/* add modal */}
+      <CreateBrand getBrands={getBrands} />
+
+      {/* table */}
+      <div className="col-lg-12">
+        <div className="card">
+          <CardHeader
+            title={"Brands"}
+            modalId={"#createBrand"}
+            buttonText={"+"}
+            btnClass={"btnAdd"}
+            totalCount={data ? data.length : 0}
+          >
+            <Searchbar
+              queries={["name"]}
+              selectedQuery={selectedQuery}
+              setSelectedQuery={setSelectedQuery}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+            />
+          </CardHeader>
+
+          <div className="card-body">
+            <div className="table-responsive">
+              <IndianaDragScroller>
+                <table className="table table-responsive-md">
+                  <thead>
+                    <tr>
+                      <th className="width80">#</th>
+                      <th>Name</th>
+                      <th>Slug</th>
+                      <th>Image</th>
+                      <th>Active</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {data ? (
+                      data?.map((item, index) => (
+                        <tr key={item.id + index}>
+                          <td>
+                            <strong>{index + 1}</strong>
+                          </td>
+                          <td>{item.name}</td>
+                          <td>{item.slug}</td>
+                          <td>
+                            {item?.image && (
+                              <img
+                                src={item?.image}
+                                alt="banner image"
+                                style={{
+                                  width: "100px",
+                                  height: "100px",
+                                  objectFit: "contain",
+                                }}
+                              />
+                            )}
+                          </td>
+                          <td>{item.isActive ? "Active" : "Inactive"}</td>
+
+                          <td>
+                            <ActionButton>
+                              <ActionButtonMenu
+                                menuName={"Edit"}
+                                menuTarget={"#editBrand" + item.id}
+                              />
+                              <ActionButtonMenu
+                                menuName={"Delete"}
+                                menuTarget={"#deleteBrand" + item.id}
+                              />
+                            </ActionButton>
+                          </td>
+                          <EditBrand item={item} getBrands={getBrands} />
+                          <DeleteData
+                            uri={`/api/v1/brands/${item.id}`}
+                            item={item}
+                            getData={getBrands}
+                            modalId={`deleteBrand${item.id}`}
+                            modalHeader={"Delete Brand"}
+                          />
+                        </tr>
+                      ))
+                    ) : (
+                      <>
+                        <tr className="col-md-12 text-center">
+                          <td></td>
+                          <td>{message}</td>
+                          <td></td>
+                        </tr>
+                      </>
+                    )}
+                  </tbody>
+
+                  <tfoot>
+                    <tr>
+                      <th className="width80">#</th>
+                      <th>Name</th>
+                      <th>Slug</th>
+                      <th>Image</th>
+                      <th>Active</th>
+                      <th>Action</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </IndianaDragScroller>
+
+              <div className="col-md-12 text-center">
+                {data?.length === limit * page && (
+                  <>
+                    <Button
+                      buttonText={"Load more"}
+                      fontSize={"11px"}
+                      buttonOnClick={() => loadMoreBrand()}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default BrandList;

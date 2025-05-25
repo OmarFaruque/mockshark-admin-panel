@@ -1,0 +1,86 @@
+[
+  {
+    "id": 0,
+    "name": "Dashboard",
+    "link": "/dashboard",
+    "icon": "flaticon-381-networking"
+  },
+  {
+    "id": 3,
+    "name": "Users",
+    "link": "/users",
+    "icon": "flaticon-381-user"
+  },
+  {
+    "id": 4,
+    "name": "Categories",
+    "link": "/categories",
+    "icon": "flaticon-381-notepad"
+  },
+  {
+    "id": 5,
+    "name": "Subcategories",
+    "link": "/subcategories",
+    "icon": "flaticon-381-notepad"
+  },
+  {
+    "id": 6,
+    "name": "Sub-Subcategories",
+    "link": "/subsubcategories",
+    "icon": "flaticon-381-notepad"
+  },
+  {
+    "id": 8,
+    "name": "Products",
+    "link": "/products",
+    "icon": "flaticon-381-box-2"
+  },
+  {
+    "id": 9,
+    "name": "Suppliers",
+    "link": "/suppliers",
+    "icon": "flaticon-381-user"
+  },
+  {
+    "id": 10,
+    "name": "Orders",
+    "link": "/orders",
+    "icon": "flaticon-381-smartphone"
+  },
+  {
+    "id": 11,
+    "name": "Banners",
+    "link": "/banners",
+    "icon": "flaticon-381-networking"
+  },
+  {
+    "id": 12,
+    "name": "Brands",
+    "link": "/brands",
+    "icon": "flaticon-381-networking"
+  },
+  {
+    "id": 13,
+    "name": "Coupons",
+    "link": "/coupons",
+    "icon": "flaticon-381-networking"
+  },
+  {
+    "id": 14,
+    "name": "Preorders",
+    "link": "/preorders",
+    "icon": "flaticon-381-smartphone"
+  },
+  {
+    "id": 15,
+    "name": "Newsletter Subscribers",
+    "link": "/newsletters",
+    "icon": "flaticon-381-user"
+  },
+  {
+    "id": 16,
+    "name": "Messages",
+    "link": "/messages",
+    "icon": "flaticon-381-notepad"
+  }
+]

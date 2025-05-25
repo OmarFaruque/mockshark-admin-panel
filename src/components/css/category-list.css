@@ -1,0 +1,41 @@
+.add_new_icon {
+  color: #ea7a9a;
+  cursor: pointer;
+}
+
+.product_list_image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.gallery_list_image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.btn_unpopular {
+  margin-left: 10px;
+}
+
+.inbox_message {
+  white-space: pre-line;
+}
+
+.card-header-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.btnAdd {
+  padding: 15px;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

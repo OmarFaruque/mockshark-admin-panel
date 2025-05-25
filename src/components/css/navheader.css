@@ -1,0 +1,73 @@
+.brand-title {
+  color: black;
+  font-size: 30px;
+  margin-top: 15px !important;
+  margin-left: 10px;
+}
+
+.order_toggle{
+  background-color: red;
+  border-radius: 20px;
+  width: 60px;
+  height: 30px;
+  padding: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.order_toggle_active{
+  background-color: rgb(26, 151, 26);
+}
+
+.order_toggle_circle{
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(20%, -50%);
+  width: 23px;
+  height: 23px;
+  background: rgb(255, 255, 255);
+  border-radius: 20px;
+  transition: 0.5s;
+}
+
+.order_toggle_circle_active{
+  transform: translate(140%, -50%);
+  transition: 0.5s;
+}
+
+
+
+/* price toggle related class */
+.price_toggle{
+  background-color: red;
+  border-radius: 20px;
+  width: 60px;
+  height: 30px;
+  padding: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.price_toggle_active{
+  background-color: rgb(26, 151, 26);
+}
+
+.price_toggle_circle{
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(20%, -50%);
+  width: 23px;
+  height: 23px;
+  background: rgb(255, 255, 255);
+  border-radius: 20px;
+  transition: 0.5s;
+}
+
+.price_toggle_circle_active{
+  transform: translate(140%, -50%);
+  transition: 0.5s;
+}

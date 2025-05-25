@@ -1,0 +1,9 @@
+.login_logo {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+
+.login_btn_div {
+  margin-top: 40px;
+}

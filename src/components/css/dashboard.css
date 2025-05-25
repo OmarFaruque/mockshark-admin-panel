@@ -1,0 +1,101 @@
+.slab-body {
+  height: auto !important;
+  overflow: auto;
+  overflow-y: auto;
+}
+
+.skill {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  margin-bottom: 60px;
+  margin-top: 30px;
+  margin-left: 30px;
+}
+
+.outer {
+  height: 160px;
+  width: 160px;
+  border-radius: 50%;
+  padding: 20px;
+  box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+    -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+}
+
+.inner {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 4px 4px 6px -1px rgba(0, 0, 0, 0.2),
+    inset -4px -4px 6px -1px rgba(255, 255, 255, 0.7),
+    -0.5px -0.5px 0px rgba(255, 255, 255, 1),
+    0.5px 0.5px 0px rgba(0, 0, 0, 0.15), 0px 12px 10px -10px rgba(0, 0, 0, 0.05);
+}
+
+#number,
+#number2,
+#number3 {
+  font-weight: 600;
+  color: #555;
+  font-size: 25px;
+}
+
+#circle {
+  fill: none;
+  stroke: url(#GradientColor);
+  strokewidth: 20px;
+  stroke-dasharray: 472;
+  stroke-dashoffset: 472;
+  animation: anim 2s linear forwards;
+}
+
+#circle2 {
+  fill: none;
+  stroke: url(#GradientColor2);
+  strokewidth: 20px;
+  stroke-dasharray: 472;
+  stroke-dashoffset: 472;
+  animation: anim 2s linear forwards;
+}
+
+#circle3 {
+  fill: none;
+  stroke: url(#GradientColor3);
+  strokewidth: 20px;
+  stroke-dasharray: 472;
+  stroke-dashoffset: 472;
+  animation: anim 2s linear forwards;
+}
+
+.percentage_bar_svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#circle.active {
+  stroke-dashoffset: 250;
+  /* transition: 2s; */
+}
+
+#circle2.active,
+#circle3.active {
+  stroke-dashoffset: 472;
+  /* transition: 2s; */
+}
+
+/* @keyframes anim {
+  100% {
+    stroke-dashoffset: 165;
+  }
+} */
+
+@media screen and (max-width: 767px) {
+  .skill {
+    margin-left: calc(100vw - 77vw);
+    margin-right: calc(100vw - 77vw);
+  }
+}

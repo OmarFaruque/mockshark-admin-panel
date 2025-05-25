@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;family=Roboto:wght@100;300;400;500;700;900&amp;display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+.App {
+  text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .blur_bg {
+    position: fixed;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.705);
+    /* backdrop-filter: blur(10px); */
+    z-index: 3;
+  }
+
+  .blur_bg_inactive {
+    /* display: none; */
+    opacity: 0;
+    transition: 0.8s;
+    visibility: hidden;
+  }
+
+  .blur_bg_active {
+    display: block;
+    opacity: 1;
+    transition: 0.5s;
+  }
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,27 @@
+.product-images {
+  position: relative;
+}
+
+.product-images:hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0.2, 0.2, 0.2, 0.2);
+  z-index: 2;
+}
+
+.product-images button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: none;
+}
+
+.product-images:hover button {
+  display: block;
+}
