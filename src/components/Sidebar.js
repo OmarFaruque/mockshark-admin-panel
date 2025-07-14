@@ -26,7 +26,7 @@ const Sidebar = () => {
           </ul>
           <div className="copyright">
             <p>
-              <strong>Voltech Admin Dashboard</strong> ©{" "}
+              <strong>Mockshark Admin Dashboard</strong> ©{" "}
               {new Date().getFullYear()} All Rights Reserved
             </p>
             {/* <p>

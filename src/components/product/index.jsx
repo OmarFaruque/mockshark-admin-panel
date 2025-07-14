@@ -41,8 +41,8 @@ const ProductList = () => {
     fetchData(
       `/api/v1/products?${selectedQuery}=${
         selectedQuery ? searchTerm : ""
-      }&page=${searchTerm.length > 2 ? "" : page}&limit=${
-        searchTerm.length > 2 ? "" : limit
+      }&page=${searchTerm.length > 5 ? "" : page}&limit=${
+        searchTerm.length > 5 ? "" : limit
       }`,
       "GET"
     )
@@ -224,14 +224,14 @@ const ProductList = () => {
                     <tr>
                       <th className="width80">#</th>
                       <th>Name</th>
-                      <th>Code</th>
-                      <th>Barcode</th>
+                      {/* <th>Code</th> */}
+                      {/* <th>Barcode</th> */}
                       <th>User</th>
-                      <th>Brand</th>
+                      {/* <th>Brand</th> */}
                       <th>Category</th>
                       <th>Subcategory</th>
-                      <th>Sub2category</th>
-                      <th>Supplier</th>
+                      {/* <th>Sub2category</th> */}
+                      {/* <th>Supplier</th> */}
                       <th>Variants</th>
                       <th></th>
                       <th></th>
@@ -257,15 +257,15 @@ const ProductList = () => {
                             <strong>{index + 1}</strong>
                           </td>
                           <td>{item?.name}</td>
-                          <td>{item?.productCode}</td>
-                          <td>{item?.barcode}</td>
+                          {/* <td>{item?.productCode}</td>
+                          <td>{item?.barcode}</td> */}
                           {/* <td>{item.name}</td> */}
-                          <td>{item?.user.name}</td>
-                          <td>{item?.brand?.name}</td>
+                          <td>{item?.user?.name}</td>
+                          {/* <td>{item?.brand?.name}</td> */}
                           <td>{item?.category.name}</td>
                           <td>{item?.subcategory?.name}</td>
-                          <td>{item?.subsubcategory?.name}</td>
-                          <td>{item?.supplier?.name}</td>
+                          {/* <td>{item?.subsubcategory?.name}</td> */}
+                          {/* <td>{item?.supplier?.name}</td> */}
                           <td style={{ fontSize: "11px" }} colSpan={5}>
                             {item?.productAttributes?.map((attr) => {
                               return (
@@ -339,10 +339,10 @@ const ProductList = () => {
                                 menuName={"Delete"}
                                 menuTarget={"#deleteProduct" + item.id}
                               />
-                              <ActionButtonMenu
+                              {/* <ActionButtonMenu
                                 menuName={"Send Email"}
                                 menuTarget={"#sendEmailProduct" + item.id}
-                              />
+                              /> */}
                             </ActionButton>
                           </td>
                           <EditProduct
@@ -356,14 +356,14 @@ const ProductList = () => {
                             item={item}
                             getProducts={getProducts}
                           />
-                          <SendEmail
+                          {/* <SendEmail
                             uri={`/api/v1/products-email/${item.id}`}
                             item={item}
                             getData={getProducts}
                             modalId={`sendEmailProduct${item.id}`}
                             modalHeader={"Send mail to subscribers"}
                             // getProducts={getProducts}
-                          />
+                          /> */}
                         </tr>
                       ))
                     ) : (
@@ -381,15 +381,15 @@ const ProductList = () => {
                     <tr>
                       <th className="width80">#</th>
                       <th>Name</th>
-                      <th>Code</th>
-                      <th>Barcode</th>
+                      {/* <th>Code</th>
+                      <th>Barcode</th> */}
                       <th>User</th>
-                      <th>Brand</th>
+                      {/* <th>Brand</th> */}
                       <th>Category</th>
                       <th>Subcategory</th>
                       <th>Sub2category</th>
-                      <th>Supplier</th>
-                      <th>Variants</th>
+                      {/* <th>Supplier</th>
+                      <th>Variants</th> */}
                       <th></th>
                       <th></th>
                       <th></th>

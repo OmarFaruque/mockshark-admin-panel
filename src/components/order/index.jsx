@@ -116,8 +116,8 @@ const OrderList = () => {
                       <th>City</th>
                       <th>Postal Code</th>
                       <th>Invoice Number</th>
-                      <th>Payment Method</th>
-                      <th>Status</th>
+                      {/* <th>Payment Method</th>
+                      <th>Status</th> */}
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -129,15 +129,15 @@ const OrderList = () => {
                           <td>
                             <strong>{index + 1}</strong>
                           </td>
-                          <td>{item.customerName}</td>
-                          <td>{item.customerPhone}</td>
-                          <td>{item.customerAddress}</td>
-                          <td>{item.customerCity}</td>
-                          <td>{item.customerPostalCode}</td>
+                          <td>{item.billingFirstName}</td>
+                          <td>{item.billingPhone}</td>
+                          <td>{item.address}</td>
+                          <td>{item.city}</td>
+                          <td>{item.postalCode}</td>
                           <td>{item.invoiceNumber}</td>
-                          <td>{item.paymentMethod}</td>
+                          {/* <td>{item.paymentMethod}</td> */}
 
-                          <td
+                          {/* <td
                             style={{
                               color: `${
                                 item.status === "PENDING"
@@ -151,7 +151,7 @@ const OrderList = () => {
                             }}
                           >
                             {item.status}
-                          </td>
+                          </td> */}
 
                           <td>
                             <ActionButton>
@@ -165,7 +165,7 @@ const OrderList = () => {
                               />
                             </ActionButton>
                           </td>
-                          <EditOrder item={item} getOrders={getOrders} />
+                          {/* <EditOrder item={item} getOrders={getOrders} /> */}
                           <SeeDetails item={item} getOrders={getOrders} />
                         </tr>
                       ))
@@ -189,8 +189,8 @@ const OrderList = () => {
                       <th>City</th>
                       <th>Postal Code</th>
                       <th>Invoice Number</th>
-                      <th>Payment Method</th>
-                      <th>Status</th>
+                      {/* <th>Payment Method</th>
+                      <th>Status</th> */}
                       <th>Action</th>
                     </tr>
                   </tfoot>

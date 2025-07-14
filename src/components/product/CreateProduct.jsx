@@ -5,6 +5,8 @@ import "../css/product.css";
 import Button from "../global/Button";
 import Loader from "../global/Loader";
 import Modal from "../global/Modal";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const createProduct = async (
   name,
@@ -43,6 +45,7 @@ const createProduct = async (
   isFeatured,
   fileSize,
   resolution,
+  downloadUrl
 ) => {
   setLoader(true);
 
@@ -97,7 +100,7 @@ for (let i = 0; i < productAttributeLength; i++) {
   const formData = new FormData();
 
   console.log({ productAttributes });
-
+  formData.append("downloadUrl", downloadUrl);
   formData.append("name", name);
   formData.append("categoryId", categoryId);
   formData.append("fileSize", fileSize);
@@ -262,6 +265,7 @@ const CreateProduct = ({
   const [subsubcategories, setSubsubcategories] = useState("");
   const [fileSize, setFileSize] = useState("");
 const [resolution, setResolution] = useState("");
+ const [downloadUrl, setDownloadUrl] = useState("");
 
 
   // const [sizes, setSizes] = useState([]);
@@ -384,7 +388,7 @@ const [resolution, setResolution] = useState("");
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">Product Code</label>
           <input
             type="text"
@@ -392,9 +396,9 @@ const [resolution, setResolution] = useState("");
             value={productCode}
             onChange={(e) => setProductCode(e.target.value)}
           />
-        </div>
+        </div> */}
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">SKU</label>
           <input
             type="text"
@@ -402,9 +406,9 @@ const [resolution, setResolution] = useState("");
             value={sku}
             onChange={(e) => setSku(e.target.value)}
           />
-        </div>
+        </div> */}
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">Barcode</label>
           <input
             type="text"
@@ -412,9 +416,9 @@ const [resolution, setResolution] = useState("");
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
           />
-        </div>
+        </div> */}
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">Brand</label>
           <select
             name="brand"
@@ -436,7 +440,7 @@ const [resolution, setResolution] = useState("");
                 </>
               ))}
           </select>
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label className="text-black font-w500">Category</label>
@@ -486,7 +490,7 @@ const [resolution, setResolution] = useState("");
           </select>
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">Sub-Subcategory</label>
           <select
             name="subsubcategory"
@@ -508,7 +512,7 @@ const [resolution, setResolution] = useState("");
                 </>
               ))}
           </select>
-        </div>
+        </div> */}
 
         {/* <div className="form-group">
           <label className="text-black font-w500">Campaign</label>
@@ -531,7 +535,7 @@ const [resolution, setResolution] = useState("");
           </select>
         </div> */}
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">Supplier</label>
           <select
             name="supplier"
@@ -550,7 +554,7 @@ const [resolution, setResolution] = useState("");
                 </>
               ))}
           </select>
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label className="text-black font-w500">Short Description</label>
@@ -562,15 +566,16 @@ const [resolution, setResolution] = useState("");
           />
         </div>
 
-        <div className="form-group">
-  <label className="text-black font-w500">Long Description</label>
-  <textarea
-    rows={6}
-    className="form-control"
-    value={longDescription}
-    onChange={(e) => setLongDescription(e.target.value)}
-  />
-</div>
+     <div className="form-group">
+      <label className="text-black font-w500 mb-2 block">Long Description</label>
+      <ReactQuill
+        theme="snow"
+        value={longDescription}
+        onChange={setLongDescription}
+        className="bg-white"
+        style={{ height: '200px', marginBottom: '40px' }}
+      />
+    </div>
 
 <div className="form-group">
   <label className="text-black font-w500">File Size </label>
@@ -589,6 +594,15 @@ const [resolution, setResolution] = useState("");
     className="form-control"
     value={resolution}
     onChange={(e) => setResolution(e.target.value)}
+  />
+</div>
+<div className="form-group">
+  <label className="text-black font-w500">DownloadUrl</label>
+  <input
+    type="text"
+    className="form-control"
+    value={downloadUrl}
+    onChange={(e) => setDownloadUrl(e.target.value)}
   />
 </div>
 
@@ -616,7 +630,7 @@ const [resolution, setResolution] = useState("");
         </div>
 
         <div className="form-group">
-          <label className="text-black font-w500">Featured?</label>
+          <label className="text-black font-w500">Recommended?</label>
           <select
             name="isFeatured"
             id="isFeatured"
@@ -637,16 +651,16 @@ const [resolution, setResolution] = useState("");
           </select>
         </div>
 
-        <div className="form-group">
-          <label className="text-black font-w500">Trending?</label>
-          <select
+        {/* <div className="form-group">
+          <label className="text-black font-w500">Trending?</label> */}
+          {/* <select
             name="isTrending"
             id="isTrending"
             className="form-control"
             onChange={(e) => setIsTrending(e.target.value)}
-          >
-            <option value="false">No</option>
-            <option value="true">Yes</option>
+          > */}
+            {/* <option value="false">No</option>
+            <option value="true">Yes</option> */}
 
             {/* {categories &&
               categories.map((category, index) => (
@@ -656,8 +670,8 @@ const [resolution, setResolution] = useState("");
                   </option>
                 </>
               ))} */}
-          </select>
-        </div>
+          {/* </select> */}
+        {/* </div> */}
 
         <hr />
         {[...Array(attributeRowsCount)].map((arraynum, ind) => (
@@ -703,9 +717,9 @@ const [resolution, setResolution] = useState("");
               >
                 <label
                   className="text-black font-w500"
-                  style={{ fontSize: "14px" }}
+                  style={{ fontSize: "12px" }}
                 >
-                  Cost Price
+                  Regular Price
                 </label>
                 <input
                   type="text"
@@ -727,9 +741,9 @@ const [resolution, setResolution] = useState("");
               >
                 <label
                   className="text-black font-w500"
-                  style={{ fontSize: "14px" }}
+                  style={{ fontSize: "12px" }}
                 >
-                  Retail Price
+                  Discount Price
                 </label>
                 <input
                   type="text"
@@ -937,6 +951,7 @@ const [resolution, setResolution] = useState("");
                     fileSize,
                    
                     resolution,
+                    downloadUrl
                     
                   )
                 }

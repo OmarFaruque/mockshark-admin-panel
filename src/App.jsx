@@ -17,6 +17,7 @@ import NavHeader from "./components/NavHeader";
 import Sidebar from "./components/Sidebar";
 import Auth from "./libs/auth";
 
+
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Module = lazy(() => import("./pages/Module"));
@@ -38,7 +39,7 @@ const Newsletter = lazy(() => import("./pages/Newsletter"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Attribute = lazy(() => import("./pages/Attribute"));
 const ProductImage = lazy(() => import("./pages/ProductImage"));
-
+const Bundle = lazy(()=> import ("./pages/Bundle"))
 // const Gallery = lazy(() => import("./pages/Gallery"));
 // const Profile = lazy(() => import("./pages/Profile"));
 // const Inbox = lazy(() => import("./pages/Inbox"));
@@ -97,6 +98,7 @@ function App() {
               <Route exact path="/newsletters" component={Auth(Newsletter)} />
               <Route exact path="/messages" component={Auth(Contact)} />
               <Route exact path="/attributes/:id" component={Auth(Attribute)} />
+              <Route exact path="/bundle" component={Auth(Bundle)} />
               <Route
                 exact
                 path="/products/images/:id"

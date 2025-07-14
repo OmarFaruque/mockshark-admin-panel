@@ -277,16 +277,16 @@ const Login = () => {
                   <div className="col-xl-12">
                     <div className="auth-form">
                       <h3 className="text-center mb-4 text-white">
-                        Voltech Dashboard
+                        MockShark Dashboard
                       </h3>
                       <form className="space-y-6 mt-8" onSubmit={handleLogin}>
-              <div className="relative">
+              <div className="relative mb-2">
                 <label 
                   htmlFor="email" 
                   className={`absolute left-4 transition-all duration-200 ${
                     isFocused.email || email 
-                      ? 'top-[-12px] text-xs bg-white px-2 text-[#1C2836]'
-                      : 'top-3 text-sm text-gray-500'
+                      ? 'top-[-12px] text-xs  px-2 text-white '
+                      : 'top-3 text-sm px-2 text-white '
                   }`}
                 >
                   Email
@@ -307,8 +307,8 @@ const Login = () => {
                   htmlFor="password" 
                   className={`absolute left-4 transition-all duration-200 ${
                     isFocused.password || password 
-                      ? 'top-[-12px] text-xs bg-white px-2 text-[#1C2836]'
-                      : 'top-3 text-sm text-gray-500'
+                      ? 'top-[-12px] text-xs  px-2 text-white'
+                      : 'top-3 text-sm px-2 text-white'
                   }`}
                 >
                   Password
@@ -344,8 +344,8 @@ const Login = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#1C2836] to-[#3A4B5F] text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
-              >
+               className="w-full bg-cyan-600 text-black py-3 px-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+>
                 Sign In
               </button>
             </form>

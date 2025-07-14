@@ -20,7 +20,7 @@ const NavHeader = () => {
           {/* <img className="logo-compact" src="images/logo-text.png" alt="logo" /> */}
           {/* <img className="brand-title" src="images/logo-text.png" alt="logo" /> */}
           {/* <p className="brand-title">OMS</p> */}
-          <h4 className="ml-2 brand-title">Voltech</h4>
+          <h4 className="ml-2 brand-title">Mockshark</h4>
         </a>
 
         <div className="nav-control">

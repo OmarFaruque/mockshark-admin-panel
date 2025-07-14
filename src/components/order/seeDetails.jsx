@@ -20,11 +20,11 @@ const SeeDetails = ({ item }) => {
         modalCloseButton={modalCloseButton}
       >
         <div className="form-group">
-          <p className="text-black font-w500">Name: {item.customerName}</p>
-          <p>Phone: {item.customerPhone}</p>
-          <p>Email: {item.customerEmail}</p>
-          <p>Address: {item.customerAddress}</p>
-          <p>Postal Code: {item.customerPostalCode}</p>
+          <p className="text-black font-w500">Name: {item.billingFirstName}</p>
+          <p>Phone: {item.billingPhone}</p>
+          <p>Email: {item.billingEmail}</p>
+          <p>Address: {item.address}</p>
+          <p>Postal Code: {item.postalCode}</p>
           <p>Total Item: {item.totalItems}</p>
           <p>Order Date: {item.createdAt}</p>
 
@@ -34,10 +34,10 @@ const SeeDetails = ({ item }) => {
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Size</th>
+                  <th>Varrient</th>
                   <th>Quantity</th>
                   <th>Price</th>
-                  <th>Discounted Price</th>
+                  {/* <th>Discounted Price</th> */}
                   <th>Total Price</th>
                 </tr>
               </thead>
@@ -47,16 +47,16 @@ const SeeDetails = ({ item }) => {
                     <td>{orderItem.name}</td>
                     <td>{orderItem.size}</td>
                     <td>{orderItem.quantity}</td>
-                    <td>{orderItem.retailPrice}</td>
-                    <td>{orderItem.discountedRetailPrice}</td>
-                    <td>{orderItem.totalPrice}</td>
+                    <td>{orderItem.costPrice}</td>
+                    {/* <td>{orderItem.discountedRetailPrice}</td> */}
+                    <td>{orderItem.totalCostPrice}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr>
                   <th>Subtotal:</th>
-                  <th>{item.subtotal}</th>
+                  <th>{item.subtotalCost}</th>
                 </tr>
               </tfoot>
             </table>
