@@ -33,7 +33,7 @@ const EditBundleModal = ({ bundle, getBundles, onClose }) => {
     e.preventDefault();
     try {
       const res = await fetch(
-        `http://localhost:4000/api/v1/bundle-update/${bundle.id}`,
+        `https://mockshark-backend.vercel.app/api/v1/bundle-update/${bundle.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
