@@ -27,7 +27,7 @@ const editProduct = async (
 ) => {
   setLoader(true);
 
-  const jsonData = await fetchData(`/api/v1/products/${item.id}`, "PUT", {
+  const jsonData = await fetchData(`/api/v1/products/${item?.id}`, "PUT", {
     name,
     shortDescription,
     longDescription,

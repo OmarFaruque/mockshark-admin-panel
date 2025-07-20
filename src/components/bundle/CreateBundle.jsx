@@ -6,6 +6,8 @@ import CardHeader from '../global/CardHeader';
 import IndianaDragScroller from '../global/IndianaDragScroller';
 import { showErrorToast, showSuccessToast } from '../../utils/toast';
 import CreateBundleModal from './CreateBundleModal';
+import EditBundleModal from './EditBundleModal';
+import Modal from '../global/Modal';
 
 const CreateBundle = () => {
   const [bundles, setBundles] = useState([]);
@@ -63,13 +65,41 @@ const handleDelete = async (id) => {
     }
   }
 };
+// const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+// const [selectedBundle, setSelectedBundle] = useState(null);
 
+// const openEditModal = (bundle) => {
+//   setSelectedBundle(bundle);
+//   setIsEditModalOpen(true);
+// };
+
+// const closeEditModal = () => {
+//   setSelectedBundle(null);
+//   setIsEditModalOpen(false);
+// };
+const [selectedBundle, setSelectedBundle] = useState(null);
+
+const openEditModal = (bundle) => {
+  setSelectedBundle(bundle);
+};
+
+const closeEditModal = () => {
+  setSelectedBundle(null);
+};
 
 
   return (
     
     <>
     <CreateBundleModal getBundles={getBundles} />
+{selectedBundle && (
+  <EditBundleModal
+    bundle={selectedBundle}
+    getBundles={getBundles}
+    onClose={closeEditModal}
+  />
+)}
+
 
       {/* Header */}
       <div className="col-lg-12 ">
@@ -112,13 +142,60 @@ const handleDelete = async (id) => {
                           <td>{bundle.mockups}</td>
                           <td>{new Date(bundle.createdAt).toLocaleDateString()}</td>
                           <td>
+<span
+  className="badge cursor-pointer"
+  style={{
+    backgroundColor: '#007bff',      // Bootstrap primary
+    color: 'white',
+    padding: '0.3em 0.75em',
+    fontWeight: '600',
+    fontSize: '0.85rem',
+    borderRadius: '0.35rem',
+    marginRight: '0.5rem',
+    transition: 'background-color 0.3s, transform 0.2s'
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.backgroundColor = '#0056b3'; // darker on hover
+    e.currentTarget.style.transform = 'scale(1.05)';
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.backgroundColor = '#007bff'; 
+    e.currentTarget.style.transform = 'scale(1)';
+  }}
+  onClick={() => openEditModal(bundle)}
+>
+  Edit
+</span>
+
+
+
+
+
                             {/* Action buttons can be added here later */}
-                           <span
-  className="badge bg-danger cursor-pointer"
+      <span
+  className="badge cursor-pointer"
+  style={{
+    backgroundColor: '#dc3545',      // Bootstrap danger
+    color: 'white',
+    padding: '0.3em 0.75em',
+    fontWeight: '600',
+    fontSize: '0.85rem',
+    borderRadius: '0.35rem',
+    transition: 'background-color 0.3s, transform 0.2s'
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.backgroundColor = '#a71d2a'; // darker red on hover
+    e.currentTarget.style.transform = 'scale(1.05)';
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.backgroundColor = '#dc3545'; 
+    e.currentTarget.style.transform = 'scale(1)';
+  }}
   onClick={() => handleDelete(bundle.id)}
 >
   Delete
 </span>
+
 
                           </td>
                         </tr>
