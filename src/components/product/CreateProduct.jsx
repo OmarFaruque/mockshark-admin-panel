@@ -719,7 +719,7 @@ const [resolution, setResolution] = useState("");
                   className="text-black font-w500"
                   style={{ fontSize: "12px" }}
                 >
-                  Regular Price
+                  Current Price
                 </label>
                 <input
                   type="text"
@@ -743,7 +743,7 @@ const [resolution, setResolution] = useState("");
                   className="text-black font-w500"
                   style={{ fontSize: "12px" }}
                 >
-                  Discount Price
+                  Regular Price
                 </label>
                 <input
                   type="text"

@@ -42,8 +42,20 @@
     "name" : "Bundle",
     "link" : "/bundle",
     "icon" : "flaticon-381-networking"
+   },
+  {
+    "id" :12,
+    "name" : "Coupons",
+    "link" : "/coupons",
+    "icon" : "flaticon-381-networking"
+   },
+   {
+    "id" :13,
+    "name" : "Blog",
+    "link" : "/blogs",
+    "icon" : "flaticon-381-networking"
    }
- 
+
   
  
 
