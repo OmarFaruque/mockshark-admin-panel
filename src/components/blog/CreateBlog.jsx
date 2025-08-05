@@ -1,246 +1,343 @@
+import React, { useState, useEffect } from "react";
+import IndianaDragScroller from "../global/IndianaDragScroller";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
 
-import React, { useEffect, useState, useCallback } from 'react';
-import fetchData from '../../libs/api';
-import Button from '../global/Button';
-import CardHeader from '../global/CardHeader';
-import IndianaDragScroller from '../global/IndianaDragScroller';
-import { showErrorToast, showSuccessToast } from '../../utils/toast';
-import CreateBundleModal from './CreateBundleModal';
-import EditBundleModal from './EditBundleModal';
-import Modal from '../global/Modal';
+const API_BASE = "https://mockshark-backend.vercel.app/api/v1";
 
-const CreateBundle = () => {
-  const [bundles, setBundles] = useState([]);
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+const CreateBlog = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    image: null,
+    imagePreview: "",
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const loadMore = useCallback(() => {
-    setPage((prev) => prev + 1);
-  }, []);
-
-  const getBundles = useCallback(() => {
-    setLoading(true);
-
-    fetchData(`/api/v1/bundles?page=${page}&limit=${limit}`, 'GET')
-      .then((result) => {
-        if (result.success) {
-          setBundles((prev) =>
-            page === 1 ? result.data : [...prev, ...result.data]
-          );
-        } else {
-          showErrorToast(result.message);
-        }
-      })
-      .catch((error) => {
-        showErrorToast(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [page, limit]);
-
-  useEffect(() => {
-    getBundles();
-  }, [page]);
-
-
-const handleDelete = async (id) => {
-  if (window.confirm('Are you sure you want to delete this bundle?')) {
+  // Fetch all blogs
+  const fetchBlogs = async () => {
     try {
-      const res = await fetch(`https://mockshark-backend.vercel.app/api/v1/bundle/${id}`, {
-        method: 'DELETE',
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        showSuccessToast('Bundle deleted successfully!');
-        getBundles(); // ✅ Refresh list
+      const res = await fetch(`${API_BASE}/blogs`);
+      const data = await res.json();
+      if (data.success) {
+        setBlogs(data.data);
       } else {
-        showErrorToast(result.message);
+        showErrorToast(data.message);
       }
     } catch (error) {
       showErrorToast(error.message);
     }
-  }
-};
-// const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-// const [selectedBundle, setSelectedBundle] = useState(null);
+  };
 
-// const openEditModal = (bundle) => {
-//   setSelectedBundle(bundle);
-//   setIsEditModalOpen(true);
-// };
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
-// const closeEditModal = () => {
-//   setSelectedBundle(null);
-//   setIsEditModalOpen(false);
-// };
-const [selectedBundle, setSelectedBundle] = useState(null);
+  // Handle text input
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-const openEditModal = (bundle) => {
-  setSelectedBundle(bundle);
-};
+  // Handle image upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setForm({
+        ...form,
+        image: file,
+        imagePreview: URL.createObjectURL(file),
+      });
+    }
+  };
 
-const closeEditModal = () => {
-  setSelectedBundle(null);
-};
+  // Create blog
+  const handleCreate = async () => {
+    if (!form.title || !form.description || !form.image) {
+      alert("Please fill all fields");
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    formData.append("image", form.image);
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE}/create-blog`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        showSuccessToast("Blog created successfully!");
+        fetchBlogs();
+        resetForm();
+      } else {
+        showErrorToast(data.message);
+      }
+    } catch (error) {
+      showErrorToast(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Edit blog
+  const handleEdit = (blog) => {
+    setIsEditing(true);
+    setEditId(blog.id);
+    setForm({
+      title: blog.title,
+      description: blog.description,
+      image: null,
+      imagePreview: blog.image,
+    });
+    setShowForm(true);
+  };
+
+  // Update blog
+  const handleUpdate = async () => {
+    if (!form.title || !form.description) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    if (form.image) {
+      formData.append("image", form.image); // new image if uploaded
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE}/blogs/${editId}`, {
+        method: "PUT",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        showSuccessToast("Blog updated successfully!");
+        fetchBlogs();
+        resetForm();
+      } else {
+        showErrorToast(data.message);
+      }
+    } catch (error) {
+      showErrorToast(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete blog
+  const deleteBlog = async (id) => {
+    if (window.confirm("Are you sure you want to delete this blog?")) {
+      try {
+        const res = await fetch(`${API_BASE}/blogs/${id}`, {
+          method: "DELETE",
+        });
+        const data = await res.json();
+        if (data.success) {
+          showSuccessToast("Blog deleted successfully!");
+          fetchBlogs();
+        } else {
+          showErrorToast(data.message);
+        }
+      } catch (error) {
+        showErrorToast(error.message);
+      }
+    }
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setForm({ title: "", description: "", image: null, imagePreview: "" });
+    setIsEditing(false);
+    setEditId(null);
+    setShowForm(false);
+  };
 
   return (
-    
-    <>
-    <CreateBundleModal getBundles={getBundles} />
-{selectedBundle && (
-  <EditBundleModal
-    bundle={selectedBundle}
-    getBundles={getBundles}
-    onClose={closeEditModal}
-  />
-)}
+    <div className="col-lg-12">
+      <div className="card">
+        {/* Header */}
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <h5>Blogs ({blogs.length})</h5>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              resetForm();
+              setShowForm(true);
+            }}
+          >
+            + Add Blog
+          </button>
+        </div>
 
+        {/* Form Popup */}
+        {showForm && (
+          <div
+            style={{
+              background: "#f8f9fa",
+              padding: "20px",
+              borderRadius: "8px",
+              margin: "15px",
+              boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+            }}
+          >
+            <div className="form-group">
+              <label>Title</label>
+              <input
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                className="form-control"
+                placeholder="Enter blog title"
+              />
+            </div>
 
-      {/* Header */}
-      <div className="col-lg-12 ">
-        <div className="card">
-          <CardHeader
-  title="Bundles"
-  modalId="#createBundle"
-  buttonText="+"
-  btnClass="btnAdd"
-  totalCount={bundles.length}
-/>
+            <div className="form-group mt-2">
+              <label>Description</label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                className="form-control"
+                placeholder="Enter description"
+              />
+            </div>
 
-
-          <div className="card-body">
-            <div className="table-responsive ">
-              <IndianaDragScroller>
-                <table className="table table-responsive-md">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Title</th>
-                      <th>Price</th>
-                      <th>Regular Price</th>
-                      <th>Discount</th>
-                      <th>Mockups</th>
-                      <th>Created At</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {bundles?.length > 0 ? (
-                      bundles.map((bundle, index) => (
-                        <tr key={bundle.id}>
-                          <td>{index + 1}</td>
-                          <td>{bundle.title}</td>
-                          <td>${bundle.price.toFixed(2)}</td>
-                          <td>${bundle.regularPrice.toFixed(2)}</td>
-                          <td>${bundle.discountPrice.toFixed(2)}</td>
-                          <td>{bundle.mockups}</td>
-                          <td>{new Date(bundle.createdAt).toLocaleDateString()}</td>
-                          <td>
-<span
-  className="badge cursor-pointer"
-  style={{
-    backgroundColor: '#007bff',      // Bootstrap primary
-    color: 'white',
-    padding: '0.3em 0.75em',
-    fontWeight: '600',
-    fontSize: '0.85rem',
-    borderRadius: '0.35rem',
-    marginRight: '0.5rem',
-    transition: 'background-color 0.3s, transform 0.2s'
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.backgroundColor = '#0056b3'; // darker on hover
-    e.currentTarget.style.transform = 'scale(1.05)';
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.backgroundColor = '#007bff'; 
-    e.currentTarget.style.transform = 'scale(1)';
-  }}
-  onClick={() => openEditModal(bundle)}
->
-  Edit
-</span>
-
-
-
-
-
-                            {/* Action buttons can be added here later */}
-      <span
-  className="badge cursor-pointer"
-  style={{
-    backgroundColor: '#dc3545',      // Bootstrap danger
-    color: 'white',
-    padding: '0.3em 0.75em',
-    fontWeight: '600',
-    fontSize: '0.85rem',
-    borderRadius: '0.35rem',
-    transition: 'background-color 0.3s, transform 0.2s'
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.backgroundColor = '#a71d2a'; // darker red on hover
-    e.currentTarget.style.transform = 'scale(1.05)';
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.backgroundColor = '#dc3545'; 
-    e.currentTarget.style.transform = 'scale(1)';
-  }}
-  onClick={() => handleDelete(bundle.id)}
->
-  Delete
-</span>
-
-
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="8" className="text-center py-4 text-muted">
-                          No bundles found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-
-                  <tfoot>
-                    <tr>
-                      <th>#</th>
-                      <th>Title</th>
-                      <th>Price</th>
-                      <th>Regular Price</th>
-                      <th>Discount</th>
-                      <th>Mockups</th>
-                      <th>Created At</th>
-                      <th>Action</th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </IndianaDragScroller>
-
-              {/* Load more */}
-              {bundles.length >= page * limit && (
-                <div className="col-md-12 text-center mt-4">
-                  <Button
-                    buttonText={loading ? 'Loading...' : 'Load more'}
-                    fontSize="12px"
-                    buttonOnClick={loadMore}
-                    disabled={loading}
-                  />
-                </div>
+            <div className="form-group mt-2">
+              <label>Image</label>
+              <input type="file" onChange={handleImageChange} className="form-control" />
+              {form.imagePreview && (
+                <img
+                  src={form.imagePreview}
+                  alt="preview"
+                  style={{
+                    width: "100px",
+                    height: "70px",
+                    objectFit: "cover",
+                    marginTop: "10px",
+                    borderRadius: "5px",
+                  }}
+                />
               )}
             </div>
+
+            <div className="mt-3">
+              {isEditing ? (
+                <button
+                  className="btn btn-success me-2"
+                  onClick={handleUpdate}
+                  disabled={loading}
+                >
+                  {loading ? "Updating..." : "Update"}
+                </button>
+              ) : (
+                <button
+                  className="btn btn-primary me-2"
+                  onClick={handleCreate}
+                  disabled={loading}
+                >
+                  {loading ? "Creating..." : "Create"}
+                </button>
+              )}
+              <button className="btn btn-secondary" onClick={resetForm}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Blog Table */}
+        <div className="card-body">
+          <div className="table-responsive">
+            <IndianaDragScroller>
+              <table className="table table-responsive-md">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {blogs.length > 0 ? (
+                    blogs.map((blog, index) => (
+                      <tr key={blog.id}>
+                        <td>{index + 1}</td>
+                        <td>{blog.title}</td>
+                        <td>{blog.description}</td>
+                        <td>
+                          {blog.image && (
+                            <img
+                              src={blog.image}
+                              alt="blog"
+                              style={{
+                                width: "80px",
+                                height: "50px",
+                                objectFit: "cover",
+                                borderRadius: "5px",
+                              }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          <span
+                            className="badge cursor-pointer"
+                            style={{
+                              backgroundColor: "#007bff",
+                              color: "white",
+                              padding: "0.3em 0.75em",
+                              fontWeight: "600",
+                              fontSize: "0.85rem",
+                              borderRadius: "0.35rem",
+                              marginRight: "0.5rem",
+                            }}
+                            onClick={() => handleEdit(blog)}
+                          >
+                            Edit
+                          </span>
+                          <span
+                            className="badge cursor-pointer"
+                            style={{
+                              backgroundColor: "#dc3545",
+                              color: "white",
+                              padding: "0.3em 0.75em",
+                              fontWeight: "600",
+                              fontSize: "0.85rem",
+                              borderRadius: "0.35rem",
+                            }}
+                            onClick={() => deleteBlog(blog.id)}
+                          >
+                            Delete
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center py-4 text-muted">
+                        No blogs found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </IndianaDragScroller>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default CreateBundle;
+export default CreateBlog;

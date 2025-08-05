@@ -252,7 +252,13 @@ const Login = () => {
       return;
     }
 
-    // Set cookies
+    // ✅ Role check for super-admin
+    if (data.data.roleId !== "7b307c77-ca01-4f9f-8935-f9b67f412fb9") {
+      toast.error("Only super-admin can login here");
+      return;
+    }
+
+    // ✅ Set cookies
     Cookies.set('accessToken', data.data.accessToken, { expires: 7 });
     Cookies.set('email', data.data.email, { expires: 7 });
     Cookies.set('id', data.data.id, { expires: 7 });
@@ -265,6 +271,7 @@ const Login = () => {
     toast.error('Something went wrong');
   }
 };
+
 
   return (
     <>

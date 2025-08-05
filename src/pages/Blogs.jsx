@@ -1,16 +1,17 @@
-import CreateBundle from "../components/bundle/CreateBundle";
+import CreateBlog from "../components/blog/CreateBlog";
 
 
-const Bundle = () => {
+
+const Blogs = () => {
   return (
     <div className="content-body">
       <div className="container-fluid">
         <div className="row">
-          <CreateBundle/>
+          <CreateBlog/>
         </div>
       </div>
     </div>
   );
 };
 
-export default Bundle;
+export default Blogs;

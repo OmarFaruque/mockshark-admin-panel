@@ -14,7 +14,7 @@ import EditUser from "./EditUser";
 
 const UserList = () => {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(6);
 
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(false);

@@ -176,7 +176,7 @@ const EditUser = ({ item, getUsers, roles }) => {
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className="text-black font-w500">Initial Payment Amount</label>
           <input
             type="text"
@@ -202,7 +202,7 @@ const EditUser = ({ item, getUsers, roles }) => {
             value={installmentTime}
             onChange={(e) => setInstallmentTime(e.target.value)}
           />
-        </div>
+        </div> */}
 
         {loader === true ? (
           <>
