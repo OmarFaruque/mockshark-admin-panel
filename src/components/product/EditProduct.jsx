@@ -4,6 +4,7 @@ import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import Button from "../global/Button";
 import Loader from "../global/Loader";
 import Modal from "../global/Modal";
+import { createPaddleProductAndPrice } from "../../utils/paddleService";
 
 const editProduct = async (
   name,
@@ -27,49 +28,78 @@ const editProduct = async (
 ) => {
   setLoader(true);
 
-  const jsonData = await fetchData(`/api/v1/products/${item?.id}`, "PUT", {
-    name,
-    shortDescription,
-    longDescription,
-    productCode,
-    barcode,
-    sku,
-    brandId,
-    categoryId,
-    subcategoryId,
-    subsubcategoryId,
-    isActive: isActive.toString(),
-    isFeatured: isFeatured.toString(),
-    isTrending: isTrending.toString(),
-    supplierId,
-  });
+  try {
+    
 
-  console.log({ isTrending });
-  console.log({ isActive });
-  console.log({ isFeatured });
+ 
 
-  const message = jsonData.message;
-  const success = jsonData.success;
+    const { productId, attributes } = await createPaddleProductAndPrice({
+      name,
+      description: shortDescription,
+      currency: "USD",
+      existingProductId: item?.paddleProductId || null,
+      attributes: item?.productAttributes
+    });
 
-  if (!success) {
+     
+    // console.log('product and price id: ', { productId, priceId });
+
+    const jsonData = await fetchData(`/api/v1/products/${item?.id}`, "PUT", {
+      name,
+      shortDescription,
+      longDescription,
+      productCode,
+      barcode,
+      sku,
+      brandId,
+      categoryId,
+      subcategoryId,
+      subsubcategoryId,
+      isActive: isActive.toString(),
+      isFeatured: isFeatured.toString(),
+      isTrending: isTrending.toString(),
+      supplierId,
+      paddleProductId: productId
+    });
+
+    const { success, message } = jsonData;
+
+    if (success) {
+      // Update product attributes if needed
+      if (attributes && Object.keys(attributes).length > 0) {
+        for (const attribute of Object.values(attributes)) {
+          await fetchData(`/api/v1/products-attributes/${attribute.id}`, "PUT", {
+            ...attribute
+          });
+        }
+      }
+    }
+
+    if (!success) {
+      setLoader(false);
+      showErrorToast(message);
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        message,
+      };
+    }
+
     setLoader(false);
-    showErrorToast(message);
-    // eslint-disable-next-line no-throw-literal
-    throw {
-      message,
-    };
-  }
+    showSuccessToast(message);
 
-  setLoader(false);
-  showSuccessToast(message);
+    //fetch data
+    getProducts();
 
-  //fetch data
-  getProducts();
+    //close modal
+    modalCloseButton.current.click();
 
-  //close modal
-  modalCloseButton.current.click();
-
-  return { success, message };
+    return { success, message };
+  }catch (error) {
+    showErrorToast(error.message);
+    throw error;
+  } finally {
+    setLoader(false);
+  } 
 };
 
 const EditProduct = ({ item, getProducts, categories, suppliers, brands }) => {
@@ -104,7 +134,7 @@ const EditProduct = ({ item, getProducts, categories, suppliers, brands }) => {
       .then((result) => {
         if (result.success) {
           setSubcategories(result.data);
-          console.log(result?.data);
+          
         } else {
           showErrorToast(result.message);
         }
@@ -132,7 +162,6 @@ const EditProduct = ({ item, getProducts, categories, suppliers, brands }) => {
       .then((result) => {
         if (result.success) {
           setSubsubcategories(result.data);
-          console.log(result?.data);
         } else {
           showErrorToast(result.message);
         }

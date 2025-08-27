@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { createPaddleProductAndPrice } from "../../utils/paddleService";
 
 const EditBundleModal = ({ bundle, getBundles, onClose }) => {
   const [formData, setFormData] = useState({
@@ -32,8 +33,26 @@ const EditBundleModal = ({ bundle, getBundles, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+
+      const { attributes, productId } = await createPaddleProductAndPrice({
+          name: formData.title,
+          description: formData.description || "No description",
+          currency: "USD",
+          existingProductId: bundle?.paddleProductId || null, // Assuming no existing product for creation
+          attributes: null,
+          type: "bundle",
+          price: parseFloat(formData.price) || 0.00
+        });
+
+        formData.paddleProductId = productId;
+        formData.paddlePriceId = attributes;
+
+  
+
+        
+
       const res = await fetch(
-        `https://mockshark-backend.vercel.app/api/v1/bundle-update/${bundle.id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/bundle-update/${bundle.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

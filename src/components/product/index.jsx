@@ -9,17 +9,15 @@ import Button from "../global/Button";
 import CardHeader from "../global/CardHeader";
 import IndianaDragScroller from "../global/IndianaDragScroller";
 import Searchbar from "../global/Searchbar";
-import SendEmail from "../global/SendEmail";
 import CreateProduct from "./CreateProduct";
 import DeleteProduct from "./DeleteProduct";
 import EditProduct from "./EditProduct";
 
 const ProductList = () => {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit] = useState(20);
 
   const [data, setData] = useState([]);
-  const [loader, setLoader] = useState(false);
 
   const [categories, setCategories] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
@@ -36,7 +34,6 @@ const ProductList = () => {
   }, [page]);
 
   const getProducts = useCallback(() => {
-    setLoader(true);
 
     fetchData(
       `/api/v1/products?${selectedQuery}=${
@@ -54,6 +51,7 @@ const ProductList = () => {
               setData([]);
             }
             setData(result.data);
+           
           } else if (page > 1) {
             setData([...data, ...result.data]);
           } else {
@@ -69,22 +67,18 @@ const ProductList = () => {
         showErrorToast(error);
       })
       .finally(() => {
-        setLoader(false);
       });
-  }, [selectedQuery, searchTerm, page, limit]);
+  }, [selectedQuery, searchTerm, page, limit, data]);
 
   useEffect(() => {
     const getProductsDebounce = setTimeout(() => {
       getProducts();
     }, 500);
-    console.log(selectedQuery);
-    console.log(searchTerm);
     return () => clearTimeout(getProductsDebounce);
-  }, [selectedQuery, searchTerm, page, limit]);
+  }, [selectedQuery, searchTerm, page, limit, getProducts]);
 
   //get all categories
   const getCategories = useCallback(() => {
-    setLoader(true);
 
     fetchData(`/api/v1/categories`, "GET")
       .then((result) => {
@@ -98,7 +92,6 @@ const ProductList = () => {
         showErrorToast(error);
       })
       .finally(() => {
-        setLoader(false);
       });
   }, []);
 
@@ -106,11 +99,10 @@ const ProductList = () => {
     getCategories();
 
     return () => setCategories([]);
-  }, []);
+  }, [getCategories]);
 
   //get all brands
   const getBrands = useCallback(() => {
-    setLoader(true);
 
     fetchData(`/api/v1/brands`, "GET")
       .then((result) => {
@@ -124,7 +116,6 @@ const ProductList = () => {
         showErrorToast(error);
       })
       .finally(() => {
-        setLoader(false);
       });
   }, []);
 
@@ -132,11 +123,10 @@ const ProductList = () => {
     getBrands();
 
     return () => setBrands([]);
-  }, []);
+  }, [getBrands]);
 
   //get all campaigns
   const getCampaigns = useCallback(() => {
-    setLoader(true);
 
     fetchData(`/api/v1/campaigns`, "GET")
       .then((result) => {
@@ -150,7 +140,6 @@ const ProductList = () => {
         showErrorToast(error);
       })
       .finally(() => {
-        setLoader(false);
       });
   }, []);
 
@@ -158,11 +147,10 @@ const ProductList = () => {
     getCampaigns();
 
     return () => setCampaigns([]);
-  }, []);
+  }, [getCampaigns]);
 
   //get all suppliers
   const getSuppliers = useCallback(() => {
-    setLoader(true);
 
     fetchData(`/api/v1/suppliers`, "GET")
       .then((result) => {
@@ -176,7 +164,6 @@ const ProductList = () => {
         showErrorToast(error);
       })
       .finally(() => {
-        setLoader(false);
       });
   }, []);
 
@@ -184,7 +171,9 @@ const ProductList = () => {
     getSuppliers();
 
     return () => setSuppliers([]);
-  }, []);
+  }, [getSuppliers]);
+
+
 
   return (
     <>
@@ -306,6 +295,7 @@ const ProductList = () => {
                                     height: "100px",
                                     objectFit: "contain",
                                   }}
+                                  alt="product"
                                 />
                               );
                             })}

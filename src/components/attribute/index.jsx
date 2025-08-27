@@ -187,6 +187,9 @@ const AttributeList = () => {
   //     return () => setSuppliers([]);
   //   }, []);
 
+
+  
+
   return (
     <>
       {/* add modal */}
