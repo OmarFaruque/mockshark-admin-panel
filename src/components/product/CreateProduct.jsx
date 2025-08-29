@@ -7,27 +7,19 @@ import Loader from "../global/Loader";
 import Modal from "../global/Modal";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { createPaddleProductAndPrice } from "../../utils/paddleService";
 
 const createProduct = async (
   name,
-  setName,
   brandId,
   categoryId,
   subcategoryId,
   subsubcategoryId,
-  setCategoryId,
-  // campaignId,
-  // setCampaignId,
   supplierId,
-  setSupplierId,
   productCode,
-  setProductCode,
   barcode,
-  setBarcode,
   shortDescription,
-  setShortDescription,
   longDescription,
-  setLongDescription,
   sizes,
   costPrices,
   retailPrices,
@@ -38,7 +30,6 @@ const createProduct = async (
   getProducts,
   setLoader,
   modalCloseButton,
-  setAttributeRowsCount,
   sku,
   isActive,
   isTrending,
@@ -56,178 +47,157 @@ const createProduct = async (
     return false;
   }
 
+  try {
 
 
-let productAttributeLength = sizes.length;
+    let productAttributeLength = sizes.length;
 
-for (let i = 0; i < productAttributeLength; i++) {
-  productAttributes.push({
-    size: sizes[i],
-    costPrice: parseFloat(costPrices[i]),
-    retailPrice: parseFloat(retailPrices[i]),
-    discountPercent: parseFloat(discounts[i]),
-    stockAmount: parseFloat(stocks[i]),
-  });
-}
+    for (let i = 0; i < productAttributeLength; i++) {
+      productAttributes.push({
+        size: sizes[i],
+        costPrice: parseFloat(costPrices[i]),
+        retailPrice: parseFloat(retailPrices[i]),
+        discountPercent: parseFloat(discounts[i]),
+        stockAmount: parseFloat(stocks[i]),
+      });
+    }
 
 
-  //for getting unique set
-  productAttributes = [
-    ...new Map(productAttributes.map((item) => [item["size"], item])).values(),
-  ];
+    //for getting unique set
+    productAttributes = [
+      ...new Map(productAttributes.map((item) => [item["size"], item])).values(),
+    ];
 
-  let totalImages = [];
-  let imagesLen = images.length;
 
-  for (let j = 0; j < imagesLen; j++) {
-    totalImages.push({ image: images[j].name.split(".")[0] });
-  }
-
-  if (productCode.trim() !== "") {
-    productCode = productCode;
-  } else {
-    productCode = undefined;
-  }
-
-  if (barcode.trim() !== "") {
-    barcode = barcode;
-  } else {
-    barcode = undefined;
-  }
-
-  console.log({ totalImages });
-
-  const formData = new FormData();
-
-  console.log({ productAttributes });
-  formData.append("downloadUrl", downloadUrl);
-  formData.append("name", name);
-  formData.append("categoryId", categoryId);
-  formData.append("fileSize", fileSize);
-  formData.append("resolution", resolution);
-  if (brandId) {
-    formData.append("brandId", brandId);
-  }
-  if (subcategoryId) {
-    formData.append("subcategoryId", subcategoryId ? subcategoryId : null);
-  }
-  if (subsubcategoryId) {
-    formData.append(
-      "subsubcategoryId",
-      subsubcategoryId ? subsubcategoryId : null
-    );
-  }
-  if (supplierId) {
-    formData.append("supplierId", supplierId ? supplierId : null);
-  }
-  if (productCode) {
-    formData.append("productCode", productCode);
-  }
-
-  if (barcode) {
-    formData.append("barcode", barcode);
-  }
-  if (shortDescription) {
-    formData.append("shortDescription", shortDescription);
-  }
-  if (longDescription) {
-    formData.append("longDescription", longDescription);
-  }
-  productAttributes?.forEach((attr, index) => {
-    formData.append(
-      `productAttributes[${index}][costPrice]`,
-      Number(attr.costPrice)
-    );
-    formData.append(
-      `productAttributes[${index}][discountPercent]`,
-      Number(attr.discountPercent)
-    );
-    formData.append(
-      `productAttributes[${index}][retailPrice]`,
-      Number(attr.retailPrice)
-    );
-    formData.append(`productAttributes[${index}][size]`, attr.size);
-    formData.append(
-      `productAttributes[${index}][stockAmount]`,
-      Number(attr.stockAmount)
-    );
-  });
-  if (images && images?.length > 0) {
-    images.forEach((image, index) => {
-      formData.append(`images`, image);
+    const { productId, attributes } = await createPaddleProductAndPrice({
+      name,
+      description: shortDescription,
+      currency: "USD",
+      existingProductId: null, // Assuming no existing product for creation
+      attributes: productAttributes.length > 0 ? productAttributes : null
     });
-  }
-  formData.append("sku", sku);
-  formData.append("isFeatured", isFeatured);
-  formData.append("isTrending", isTrending);
-  formData.append("isActive", isActive);
 
-  //   {
-  //   name,
-  //   categoryId,
-  //   subcategoryId: subcategoryId ? subcategoryId : null,
-  //   subsubcategoryId: subsubcategoryId ? subsubcategoryId : null,
-  //   // campaignId,
-  //   supplierId: supplierId ? supplierId : null,
-  //   productCode,
-  //   barcode,
-  //   shortDescription,
-  //   longDescription,
-  //   productAttributes,
-  //   images: totalImages,
-  //   sku,
-  //   isFeatured,
-  //   isTrending,
-  //   isActive,
-  // }
 
-  const jsonData = await fetchData("/api/v1/products", "POST", formData, true);
 
-  const message = jsonData.message;
-  const success = jsonData.success;
 
-  if (!success) {
+    let totalImages = [];
+    let imagesLen = images.length;
+
+    for (let j = 0; j < imagesLen; j++) {
+      totalImages.push({ image: images[j].name.split(".")[0] });
+    }
+
+    if (productCode.trim() !== "") {
+      productCode = productCode;
+    } else {
+      productCode = undefined;
+    }
+
+    if (barcode.trim() !== "") {
+      barcode = barcode;
+    } else {
+      barcode = undefined;
+    }
+
+    const formData = new FormData();
+
+    formData.append("downloadUrl", downloadUrl);
+    formData.append("name", name);
+    formData.append("categoryId", categoryId);
+    formData.append("fileSize", fileSize);
+    formData.append("resolution", resolution);
+    if (brandId) {
+      formData.append("brandId", brandId);
+    }
+    if (subcategoryId) {
+      formData.append("subcategoryId", subcategoryId ? subcategoryId : null);
+    }
+    if (subsubcategoryId) {
+      formData.append(
+        "subsubcategoryId",
+        subsubcategoryId ? subsubcategoryId : null
+      );
+    }
+    if (supplierId) {
+      formData.append("supplierId", supplierId ? supplierId : null);
+    }
+    if (productCode) {
+      formData.append("productCode", productCode);
+    }
+
+    if (barcode) {
+      formData.append("barcode", barcode);
+    }
+    if (shortDescription) {
+      formData.append("shortDescription", shortDescription);
+    }
+    if (longDescription) {
+      formData.append("longDescription", longDescription);
+    }
+    Object.entries(attributes).forEach(([key, attr], index) => {
+      formData.append(
+        `productAttributes[${index}][costPrice]`,
+        Number(attr.costPrice)
+      );
+      formData.append(
+        `productAttributes[${index}][discountPercent]`,
+        Number(attr.discountPercent)
+      );
+      formData.append(
+        `productAttributes[${index}][retailPrice]`,
+        Number(attr.retailPrice)
+      );
+      formData.append(`productAttributes[${index}][size]`, attr.size);
+
+      formData.append(`productAttributes[${index}][paddlePriceId]`, attr.paddlePriceId);
+
+      formData.append(
+        `productAttributes[${index}][stockAmount]`,
+        Number(attr.stockAmount)
+      );
+    });
+    if (images && images?.length > 0) {
+      images.forEach((image, index) => {
+        formData.append(`images`, image);
+      });
+    }
+    formData.append("sku", sku);
+    formData.append("isFeatured", isFeatured);
+    formData.append("isTrending", isTrending);
+    formData.append("isActive", isActive);
+    formData.append("paddleProductId", productId);
+    formData.append("paddleProductAttributes", JSON.stringify(attributes));
+
+    const jsonData = await fetchData("/api/v1/products", "POST", formData, true);
+
+    const message = jsonData.message;
+    const success = jsonData.success;
+
+    if (!success) {
+      setLoader(false);
+      showErrorToast(message);
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        message,
+      };
+    }
+
     setLoader(false);
-    showErrorToast(message);
-    // eslint-disable-next-line no-throw-literal
-    throw {
-      message,
-    };
+
+    showSuccessToast(message);
+    //fetch data
+    getProducts();
+
+    //close modal
+    modalCloseButton.current.click();
+
+    return { success, message };
+  } catch (error) {
+    showErrorToast(error.message);
+    throw error;
+  } finally {
+    setLoader(false);
   }
-
-  setLoader(false);
-
-  showSuccessToast(message);
-  //fetch data
-  getProducts();
-
-  //close modal
-  modalCloseButton.current.click();
-  // setName("");
-
-  // setCategoryId("");
-
-  // setCampaignId("");
-
-  // setSupplierId("");
-
-  // setProductCode("");
-
-  // setBarcode("");
-
-  // setDescription("");
-
-  // setAttributeRowsCount(0);
-
-  // sizes = [];
-  // costPrices = [];
-  // retailPrices = [];
-  // discounts = [];
-  // stocks = [];
-  // images = [];
-  // productAttributes = [];
-
-  return { success, message };
 };
 
 let sizes = [];
@@ -241,7 +211,6 @@ let productAttributes = [];
 const CreateProduct = ({
   getProducts,
   categories,
-  campaigns,
   suppliers,
   brands,
 }) => {
@@ -255,17 +224,15 @@ const CreateProduct = ({
   const [brandId, setBrandId] = useState("");
   const [subcategoryId, setSubcategoryId] = useState("");
   const [subsubcategoryId, setSubsubcategoryId] = useState("");
-  const [campaignId, setCampaignId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [sku, setSku] = useState("");
   const [isActive, setIsActive] = useState("true");
   const [isFeatured, setIsFeatured] = useState("false");
   const [isTrending, setIsTrending] = useState("false");
   const [subcategories, setSubcategories] = useState("");
-  const [subsubcategories, setSubsubcategories] = useState("");
   const [fileSize, setFileSize] = useState("");
-const [resolution, setResolution] = useState("");
- const [downloadUrl, setDownloadUrl] = useState("");
+  const [resolution, setResolution] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
 
   // const [sizes, setSizes] = useState([]);
@@ -322,7 +289,6 @@ const [resolution, setResolution] = useState("");
       .then((result) => {
         if (result.success) {
           setSubcategories(result.data);
-          console.log(result?.data);
         } else {
           showErrorToast(result.message);
         }
@@ -349,8 +315,6 @@ const [resolution, setResolution] = useState("");
     fetchData(`/api/v1/subsubcategoriesBySubcategory/${subcatId}`, "GET")
       .then((result) => {
         if (result.success) {
-          setSubsubcategories(result.data);
-          console.log(result?.data);
         } else {
           showErrorToast(result.message);
         }
@@ -915,24 +879,15 @@ const [resolution, setResolution] = useState("");
                 buttonOnClick={() =>
                   createProduct(
                     name,
-                    setName,
                     brandId,
                     categoryId,
                     subcategoryId,
                     subsubcategoryId,
-                    setCategoryId,
-                    // campaignId,
-                    // setCampaignId,
                     supplierId,
-                    setSupplierId,
                     productCode,
-                    setProductCode,
                     barcode,
-                    setBarcode,
                     shortDescription,
-                    setShortDescription,
                     longDescription,
-                    setLongDescription,
                     sizes,
                     costPrices,
                     retailPrices,
@@ -943,16 +898,13 @@ const [resolution, setResolution] = useState("");
                     getProducts,
                     setLoader,
                     modalCloseButton,
-                    setAttributeRowsCount,
                     sku,
                     isActive,
                     isTrending,
                     isFeatured,
                     fileSize,
-                   
                     resolution,
                     downloadUrl
-                    
                   )
                 }
                 buttonText={"Submit"}
@@ -966,4 +918,3 @@ const [resolution, setResolution] = useState("");
 };
 
 export default CreateProduct;
- 

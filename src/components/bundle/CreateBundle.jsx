@@ -87,6 +87,7 @@ const closeEditModal = () => {
   setSelectedBundle(null);
 };
 
+console.log('bundles: ', bundles);
 
   return (
     

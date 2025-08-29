@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { showErrorToast, showSuccessToast } from '../../utils/toast';
+import { createPaddleProductAndPrice } from "../../utils/paddleService";
 
 const CreateBundleModal = ({ getBundles }) => {
   const [formData, setFormData] = useState({
@@ -19,8 +20,27 @@ const CreateBundleModal = ({ getBundles }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
+    const { attributes, productId } = await createPaddleProductAndPrice({
+      name: formData.title,
+      description: formData.description || "No description",
+      currency: "USD",
+      existingProductId: null, // Assuming no existing product for creation
+      attributes: null,
+      type: "bundle",
+      price: parseFloat(formData.price) || 0.00
+    });
+
+    formData.paddleProductId = productId;
+    formData.paddlePriceId = attributes;
+
+
+
+
+
     try {
-      const res = await fetch('https://mockshark-backend.vercel.app/api/v1/bundle', {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/bundle`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,6 +51,8 @@ const CreateBundleModal = ({ getBundles }) => {
           regularPrice: parseFloat(formData.regularPrice),
           discountPrice: parseFloat(formData.discountPrice),
           mockups: parseInt(formData.mockups),
+          paddleProductId: formData.paddleProductId,  
+          paddlePriceId: formData.paddlePriceId
         }),
       });
 
