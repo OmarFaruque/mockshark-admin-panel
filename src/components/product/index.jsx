@@ -174,7 +174,6 @@ const ProductList = () => {
   }, [getSuppliers]);
 
 
-
   return (
     <>
       {/* add modal */}

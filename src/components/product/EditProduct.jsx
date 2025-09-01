@@ -182,6 +182,9 @@ const EditProduct = ({ item, getProducts, categories, suppliers, brands }) => {
     return () => setSubsubcategories([]);
   }, [subcategoryId]);
 
+
+  
+
   return (
     <>
       <Modal
