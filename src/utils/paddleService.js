@@ -43,9 +43,6 @@ export const createPaddleProductAndPrice = async ({
 
     if (!paddleProductId) {
 
-      console.log('name: ', name);
-      console.log('description: ', description);
-
       const productData = await fetchData(
         "/api/v1/paddle/products",
         "POST",
